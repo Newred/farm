@@ -8,6 +8,8 @@ package mvc
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	
+	import gamecore.GameCore;
+	
 	public class View extends Sprite
 	{
 		private var model:Model;
@@ -15,7 +17,7 @@ package mvc
 		private var target:Stage;
 		
 		private var uicontainer:Sprite = new Sprite();
-		private var maincontainer:Sprite = new Sprite();
+		private var maincontainer:GameCore = new GameCore();
 		private var earthcontainer:Sprite = new Sprite();
 
 		private var tf:TextField;
@@ -26,17 +28,15 @@ package mvc
 			controller 	= _controller;
 			target 		= _target;
 			
-			
 			createUI();
+			createListener();
 			
-			model.addEventListener(Model.MEVENT, modelGameEvent);
 			controller.fromView("run","");
-			
 		}
 		
 		public function createUI():void
 		{
-			maincontainer.addChild(earthcontainer);
+			maincontainer.add(earthcontainer);
 			target.addChild(maincontainer);
 			target.addChild(uicontainer);
 			
@@ -46,6 +46,11 @@ package mvc
 			_trace("****");
 
 			uicontainer.addChild(tf);
+		}
+		
+		private function createListener():void
+		{
+			model.addEventListener(Model.MEVENT, modelGameEvent);
 		}
 		
 		private function modelGameEvent(e:GameEvent):void
