@@ -24,6 +24,7 @@ package ui
 			tf.selectable = false;
 			tf.mouseEnabled = false;
 			tf.y = 5; 
+			tf.width = 100; // fix 
 			tf.height = 20; // fix 
 			init();
 		}
@@ -46,11 +47,11 @@ package ui
 		private function createFrame():void
 		{
 			sp1 = new Shape();// st
-			createBtnState(sp1, 0x112211, 0x99AA99);
+			createBtnState(sp1, 0x112211, 0xCCCCCC);
 			sp2 = new Shape();// over
-			createBtnState(sp2, 0x112211, 0xAABBAA, 0xFFFFFF);
+			createBtnState(sp2, 0x112211, 0xDDEEDD, 0xFFFFFF);
 			sp3 = new Shape();// down
-			createBtnState(sp3, 0x112211, 0x667766);
+			createBtnState(sp3, 0x112211, 0xAABBAA);
 		
 			sp2.visible = false;
 			sp3.visible = false;

@@ -53,6 +53,12 @@ package mvc
 		private function createListener():void
 		{
 			model.addEventListener(Model.MEVENT, modelGameEvent);
+			maincontainer.addEventListener(GameCore.PLANT, needPlant);
+		}
+		
+		private function needPlant(e:GameEvent):void
+		{
+			trace("добавить плант");
 		}
 		
 		private function modelGameEvent(e:GameEvent):void
