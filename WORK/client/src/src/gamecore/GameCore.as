@@ -11,7 +11,7 @@ package gamecore
 		public static const PLANT:String = "plant";
 		private var WIDTH:int = 640;
 		private var HEIGHT:int = 480;
-		private var container:Sprite = new Sprite();
+		private var plantscore:PlantsAll = new PlantsAll();
 		private var bMousePress:Boolean;
 
 		private var bLessX:int;
@@ -25,15 +25,16 @@ package gamecore
 			init();
 		}
 		
-		public function add(sp:Sprite):void
+		public function add(sp:PlantsAll):void
 		{
-			container.addChild(sp);	
+			plantscore = sp ;
+			addChild(plantscore);
 		}
 		
 		private function init():void
 		{
 			createListener();
-			addChild(container);
+			addChild(plantscore);
 		}
 		
 		private function createListener():void
@@ -41,29 +42,33 @@ package gamecore
 			addEventListener(MouseEvent.MOUSE_DOWN, mousedown);
 			addEventListener(MouseEvent.MOUSE_UP, mouseup);
 			addEventListener(MouseEvent.MOUSE_MOVE, mousemove);
-			addEventListener(MouseEvent.MOUSE_OUT, mouseup);
+			addEventListener(MouseEvent.MOUSE_OUT, mouseout);
 			//addEventListener(MouseEvent.CLICK, mouseclick);
 		}	
-		
-	
 		
 		protected function mousemove(e:MouseEvent):void
 		{
 			if(bMousePress)
 			{
-				container.x = mouseX - bLessX;
-				container.y = mouseY - bLessY;
-				if(container.x > 0) container.x = 0 ;
-				if(container.y > 0) container.y = 0 ;
-				if(container.x < WIDTH-container.width) container.x = WIDTH - container.width;
-				if(container.y < HEIGHT-container.height) container.y = HEIGHT - container.height;
+				plantscore.x = mouseX - bLessX;
+				plantscore.y = mouseY - bLessY;
+				if(plantscore.x > 0) plantscore.x = 0 ;
+				if(plantscore.y > 0) plantscore.y = 0 ;
+				if(plantscore.x < WIDTH-plantscore.width) plantscore.x = WIDTH - plantscore.width;
+				if(plantscore.y < HEIGHT-plantscore.height) plantscore.y = HEIGHT - plantscore.height;
+			}
+			if(plantscore.hasFreePlant())
+			{
+				plantscore.mousemove(mouseX - x ,mouseY - y);
 			}
 		}
-		
+		protected function mouseout(e:MouseEvent):void
+		{
+			bMousePress = false;
+		}
 		protected function mouseup(e:MouseEvent):void
 		{
 			bMousePress = false;
-			trace("mouseup");
 			
 			if( oldX == mouseX &&
 				oldY == mouseY )
@@ -77,8 +82,8 @@ package gamecore
 		protected function mousedown(e:MouseEvent):void
 		{
 			bMousePress = true;
-			bLessX = mouseX - container.x;
-			bLessY = mouseY - container.y;
+			bLessX = mouseX - plantscore.x;
+			bLessY = mouseY - plantscore.y;
 			oldX = mouseX;
 			oldY = mouseY;
 		}

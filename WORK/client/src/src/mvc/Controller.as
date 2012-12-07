@@ -24,6 +24,9 @@ package mvc
 				case "run":
 					initApp();// запустить приложение.
 					break;
+				case "loadPicture":
+					loadPlant(value);
+					break
 			}
 		}
 		private function initApp():void
@@ -37,6 +40,11 @@ package mvc
 			e.target.loader.removeEventListener(Event.COMPLETE, takeimage);
 			model.setBG(e.target.content as Bitmap);
 		}
-	
+		
+		private function loadPlant(key:String):void
+		{
+			model.addPlant(key);
+			// здесь отправим данные на сервер.
+		}
 	}
 }

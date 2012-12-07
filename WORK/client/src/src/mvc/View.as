@@ -9,6 +9,8 @@ package mvc
 	import flash.text.TextField;
 	
 	import gamecore.GameCore;
+	import gamecore.Plant;
+	import gamecore.PlantsAll;
 	
 	import ui.GameUI;
 	
@@ -18,9 +20,9 @@ package mvc
 		private var controller:Controller;
 		private var target:Stage;
 		
-		private var uicontainer:GameUI = new GameUI();
-		private var maincontainer:GameCore = new GameCore();
-		private var earthcontainer:Sprite = new Sprite();
+		private var uicontainer:GameUI 			= new GameUI();
+		private var maincontainer:GameCore 		= new GameCore();
+		private var plants:PlantsAll 				= new PlantsAll();
 
 		private var tf:TextField;
 		
@@ -38,13 +40,13 @@ package mvc
 		
 		public function createUI():void
 		{
-			maincontainer.add(earthcontainer);
+			maincontainer.add(plants);
 			target.addChild(maincontainer);
 			target.addChild(uicontainer);
 			
-			tf = new TextField();
+			tf 	= new TextField();
 			tf.autoSize = "left" ;
-			tf.text = "text3";
+			tf.text 	= "text3";
 			_trace("****");
 
 			target.addChild(tf);
@@ -54,11 +56,23 @@ package mvc
 		{
 			model.addEventListener(Model.MEVENT, modelGameEvent);
 			maincontainer.addEventListener(GameCore.PLANT, needPlant);
+			uicontainer.addEventListener(GameUI.TYPEPLANT, selectedPlant);
 		}
 		
 		private function needPlant(e:GameEvent):void
 		{
-			trace("добавить плант");
+		//	trace("добавить плант");
+			uicontainer.visibleBtn(mouseX, mouseY);
+		}
+		
+		private function selectedPlant(e:GameEvent):void
+		{
+			uicontainer.visibleBtn(mouseX, mouseY); // visible false;
+			// загрузить картинку.
+			controller.fromView("loadPicture", e.param);
+			// привязать её к мышке.
+			
+			// положить при клике в GameCore
 		}
 		
 		private function modelGameEvent(e:GameEvent):void
@@ -66,8 +80,15 @@ package mvc
 			_trace("mge");
 			if(e.window == "loadBG")
 			{
-				earthcontainer.addChildAt(model.getChildAt(0),0);
+				plants.addChild(model.getChildAt(0));
 				_trace("bg");
+			}
+			if(e.window == "loadPlant")
+			{	
+				_trace("loadPlant "+model.getChildAt(0));
+				model.getChildAt(0).x = mouseX;
+				model.getChildAt(0).y = mouseY;
+				plants.addPlant(model.getChildAt(0) as Plant);	
 			}
 		}
 		
