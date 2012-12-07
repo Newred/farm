@@ -7,14 +7,14 @@ package gamecore
 	public class GameCore extends Sprite
 	{
 		
-		private var WIDTH:int = 446;
-		private var HEIGHT:int = 332;
+		private var WIDTH:int = 640;
+		private var HEIGHT:int = 480;
 		private var container:Sprite = new Sprite();
 		private var bMousePress:Boolean;
 
 		private var bLessX:int;
-
 		private var bLessY:int;
+		
 		public function GameCore()
 		{
 			init();
@@ -40,7 +40,7 @@ package gamecore
 		}	
 		
 		
-		protected function mousemove(event:MouseEvent):void
+		protected function mousemove(e:MouseEvent):void
 		{
 			if(bMousePress)
 			{
@@ -48,7 +48,7 @@ package gamecore
 				container.y = mouseY - bLessY;
 				if(container.x > 0) container.x = 0 ;
 				if(container.y > 0) container.y = 0 ;
-				if(container.x < (WIDTH-container.width)) container.x = (WIDTH-container.width);
+				if(container.x < WIDTH-container.width) container.x = WIDTH - container.width;
 				if(container.y < HEIGHT-container.height) container.y = HEIGHT - container.height;
 			}
 		}

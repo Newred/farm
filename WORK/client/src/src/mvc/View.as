@@ -10,13 +10,15 @@ package mvc
 	
 	import gamecore.GameCore;
 	
+	import ui.GameUI;
+	
 	public class View extends Sprite
 	{
 		private var model:Model;
 		private var controller:Controller;
 		private var target:Stage;
 		
-		private var uicontainer:Sprite = new Sprite();
+		private var uicontainer:GameUI = new GameUI();
 		private var maincontainer:GameCore = new GameCore();
 		private var earthcontainer:Sprite = new Sprite();
 
@@ -45,7 +47,7 @@ package mvc
 			tf.text = "text3";
 			_trace("****");
 
-			uicontainer.addChild(tf);
+			target.addChild(tf);
 		}
 		
 		private function createListener():void
