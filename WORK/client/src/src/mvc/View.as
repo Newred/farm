@@ -10,7 +10,7 @@ package mvc
 	
 	import gamecore.GameCore;
 	import gamecore.Plant;
-	import gamecore.PlantsAll;
+	import gamecore.Plantation;
 	
 	import ui.GameUI;
 	
@@ -22,7 +22,7 @@ package mvc
 		
 		private var uicontainer:GameUI 			= new GameUI();
 		private var maincontainer:GameCore 		= new GameCore();
-		private var plants:PlantsAll 				= new PlantsAll();
+		private var plantation:Plantation 		= new Plantation();
 
 		private var tf:TextField;
 		
@@ -40,10 +40,10 @@ package mvc
 		
 		public function createUI():void
 		{
-			maincontainer.add(plants);
+			maincontainer.add(plantation);
 			target.addChild(maincontainer);
 			target.addChild(uicontainer);
-			
+			uicontainer.mouseEnabled = false;
 			tf 	= new TextField();
 			tf.autoSize = "left" ;
 			tf.text 	= "text3";
@@ -62,7 +62,9 @@ package mvc
 		private function needPlant(e:GameEvent):void
 		{
 		//	trace("добавить плант");
-			uicontainer.visibleBtn(mouseX, mouseY);
+			if(!plantation.hasFreePlant())
+				uicontainer.visibleBtn(mouseX, mouseY);
+			else plantation.setFree();
 		}
 		
 		private function selectedPlant(e:GameEvent):void
@@ -80,7 +82,7 @@ package mvc
 			_trace("mge");
 			if(e.window == "loadBG")
 			{
-				plants.addChild(model.getChildAt(0));
+				plantation.addChild(model.getChildAt(0));
 				_trace("bg");
 			}
 			if(e.window == "loadPlant")
@@ -88,7 +90,7 @@ package mvc
 				_trace("loadPlant "+model.getChildAt(0));
 				model.getChildAt(0).x = mouseX;
 				model.getChildAt(0).y = mouseY;
-				plants.addPlant(model.getChildAt(0) as Plant);	
+				plantation.addPlant(model.getChildAt(0) as Plant);	
 			}
 		}
 		

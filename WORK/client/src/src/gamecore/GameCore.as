@@ -11,7 +11,7 @@ package gamecore
 		public static const PLANT:String = "plant";
 		private var WIDTH:int = 640;
 		private var HEIGHT:int = 480;
-		private var plantscore:PlantsAll = new PlantsAll();
+		private var plantscore:Plantation = new Plantation();
 		private var bMousePress:Boolean;
 
 		private var bLessX:int;
@@ -25,7 +25,7 @@ package gamecore
 			init();
 		}
 		
-		public function add(sp:PlantsAll):void
+		public function add(sp:Plantation):void
 		{
 			plantscore = sp ;
 			addChild(plantscore);
@@ -59,7 +59,7 @@ package gamecore
 			}
 			if(plantscore.hasFreePlant())
 			{
-				plantscore.mousemove(mouseX - x ,mouseY - y);
+				plantscore.mousemove();
 			}
 		}
 		protected function mouseout(e:MouseEvent):void
@@ -69,7 +69,6 @@ package gamecore
 		protected function mouseup(e:MouseEvent):void
 		{
 			bMousePress = false;
-			
 			if( oldX == mouseX &&
 				oldY == mouseY )
 			{
