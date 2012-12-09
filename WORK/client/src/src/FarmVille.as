@@ -7,7 +7,7 @@ package
 	import mvc.Model;
 	import mvc.View;
 	
-	[SWF(width="640",height="480",frameRate="60",backgroundColor="#85E9F3")]
+	[SWF(width="640",height="480",frameRate="60",backgroundColor="#1CB92C")]
 	public class FarmVille extends Sprite
 	{
 		public function FarmVille()

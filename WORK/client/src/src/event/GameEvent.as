@@ -5,9 +5,9 @@ package event
 	public class GameEvent extends Event
 	{
 		public var window:String;
-		public var param:String;
+		public var param:Object;
 		public function GameEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, 
-								  window:String="window", param:String="param")
+								  window:String="window", param:Object="param")
 		{
 			super(type, bubbles, cancelable);
 			this.window = window;

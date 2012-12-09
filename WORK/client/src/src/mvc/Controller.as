@@ -5,46 +5,81 @@ package mvc
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 
-	public class Controller
+	public class Controller extends Sprite
 	{
-		private var model:Model = new Model();
+		private var model:Model;
+		private var bMouseDown:Boolean = false;
+
+		private var oldStage:Object = {};
 
 		public function Controller(_model:Model)
 		{
 			model = _model;
 		}
 		
-		public function fromView(key:String, value:String):void
+		public function init(target:Stage):void
 		{
-			switch(key)
-			{
-				case "run":
-					initApp();// запустить приложение.
-					break;
-				case "loadPicture":
-					loadPlant(value);
-					break
-			}
+			loadbg();
+			createListener(target);
 		}
-		private function initApp():void
+		
+		private function loadbg():void
 		{
-			var loaderGB:Loader = new Loader();
-			loaderGB.contentLoaderInfo.addEventListener(Event.COMPLETE, takeimage);
-			loaderGB.load(new URLRequest("lib/BG.jpg"));
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, bgComplite);
+			loader.load(new URLRequest("lib/BG.jpg"));
 		}
-		private function takeimage(e:Event):void
+		private function bgComplite(e:Event):void
 		{
-			e.target.loader.removeEventListener(Event.COMPLETE, takeimage);
+			e.target.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, bgComplite);
 			model.setBG(e.target.content as Bitmap);
 		}
 		
-		private function loadPlant(key:String):void
+		private function createListener(target:Stage):void
 		{
-			model.addPlant(key);
-			// здесь отправим данные на сервер.
+			target.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
+			target.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+			target.addEventListener(MouseEvent.MOUSE_UP, mouseUp);
 		}
+		
+		private function mouseMove(e:MouseEvent):void
+		{
+			if(bMouseDown)
+			{
+				// дать координату нажатия
+				model.moveLand(e.stageX - oldStage.x, e.stageY - oldStage.y);
+			}
+		}
+		
+		private function mouseDown(e:MouseEvent):void
+		{
+			bMouseDown = true;
+			oldStage.x = e.localX ;
+			oldStage.y = e.localY ;
+			//trace("e.stg e.loc mouse "+e.stageX+" "+e.localX+" "+mouseX);
+		}
+		
+		private function mouseUp(e:MouseEvent):void
+		{
+			bMouseDown = false;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 }
