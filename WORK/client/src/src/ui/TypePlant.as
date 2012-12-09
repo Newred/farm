@@ -6,15 +6,15 @@ package ui
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
-	public class GameUI extends Sprite
+	public class TypePlant extends Sprite
 	{
-		public static const TYPEPLANT:String = "typeplant";
+		public static const CHOOSE:String = "choose";
 		private var btn1:Button;
 		private var btn2:Button;
 		private var btn3:Button;
 		private var btnContainer:Sprite = new Sprite();
 		
-		public function GameUI()
+		public function TypePlant()
 		{
 			init();
 		}
@@ -37,12 +37,12 @@ package ui
 				btnContainer.addChild(this["btn"+(i+1)]);
 			}
 			btnContainer.addEventListener(MouseEvent.CLICK, btnclick);
-			btnContainer.visible = false;
+			//btnContainer.visible = false;
 		}
 		
 		private function btnclick(e:MouseEvent):void
 		{
-			dispatchView(e.target.name);
+			dispatchView(e.target.name);	
 		}
 		
 		public function visibleBtn(_mouseX:int, _mouseY:int):void
@@ -54,7 +54,12 @@ package ui
 		
 		private function dispatchView(id:String):void
 		{
-			dispatchEvent(new GameEvent(TYPEPLANT,false,false,"GameUI",id));
+			dispatchEvent(new GameEvent(CHOOSE, false, false, id, ""));
+		}
+		
+		public function remove():void
+		{
+			this.parent.removeChild(this);
 		}
 	}
 }

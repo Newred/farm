@@ -47,11 +47,11 @@ package ui
 		private function createFrame():void
 		{
 			sp1 = new Shape();// st
-			createBtnState(sp1, 0x112211, 0xCCCCCC);
+			createBtnState(sp1, 0x007700, 0xCCCCCC);
 			sp2 = new Shape();// over
-			createBtnState(sp2, 0x112211, 0xDDEEDD, 0xFFFFFF);
+			createBtnState(sp2, 0xEE9900, 0xDDEEDD, 0xFFFFFF);
 			sp3 = new Shape();// down
-			createBtnState(sp3, 0x112211, 0xAABBAA);
+			createBtnState(sp3, 0x557700, 0xAABBAA);
 		
 			sp2.visible = false;
 			sp3.visible = false;
@@ -62,10 +62,13 @@ package ui
 		{
 			sp.graphics.beginFill(color,1);
 			sp.graphics.drawRect(-2,-2,84,34);
-			sp.graphics.beginFill(colorBG,0.6);
+		
+			sp.graphics.beginFill(colorBG,1);
 			sp.graphics.drawRect(0,0,80,30);
-			sp.graphics.beginFill(color,0.6);
+			
+			sp.graphics.beginFill(color,1);
 			sp.graphics.drawRect(2,2,76,26);
+			
 			sp.graphics.endFill();
 			addChild(sp);
 			/*if(filtercolor != 0)
