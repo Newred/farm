@@ -6,6 +6,8 @@ package mvc
 	import flash.display.Stage;
 	import flash.events.Event;
 	
+	import plant.Plant;
+	
 	public class View extends Sprite
 	{
 		private var model:Model;
@@ -25,21 +27,27 @@ package mvc
 		
 		private function init():void
 		{
-			model.addEventListener("getBG", getBGR);
+			model.addEventListener("getBG", getBG);
 			model.addEventListener("moveLand", moveLand);
+			model.addEventListener("addPlant", addPlant);
 			container = new Sprite();
 			target.addChild(container);
 			controller.init(target);
 		}
-		private function getBGR(e:GameEvent):void
+		private function getBG(e:GameEvent):void
 		{
-			container.addChild(model.getBG());
+			container.addChildAt(model.getBG(),0);
 		}
 		
 		private function moveLand(e:GameEvent):void
 		{
 			container.x = e.param["x"];
 			container.y = e.param["y"];
+		}
+		
+		private function addPlant(e:GameEvent):void
+		{
+			container.addChild(model.getPlant());
 		}
 	}
 }
