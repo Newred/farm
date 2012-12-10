@@ -1,5 +1,7 @@
 package mvc
 {
+	import connection.Connection;
+	
 	import event.GameEvent;
 	
 	import flash.display.Bitmap;
@@ -11,6 +13,8 @@ package mvc
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
+	import flash.system.ApplicationDomain;
+	import flash.system.LoaderContext;
 	
 	import plant.Plant;
 	
@@ -27,6 +31,8 @@ package mvc
 		private var lastPressed:int = 0;
 		private var lastType:String = "";
 		private var lastLevel:int = 1;
+
+		private var connection:Connection;
 		
 		public function Controller(_model:Model)
 		{
@@ -38,6 +44,7 @@ package mvc
 			loadbg();
 			createListener(target);
 			createPlant();
+			createConnection();
 		}
 		
 		public function choosePlant( _type:String, _id:String=""):void
@@ -74,28 +81,36 @@ package mvc
 		{
 			trace("level up");
 			var arr:Array = model.getLandArray(); // получить список полей.
-			var types:String = arr[i].getType();
-			var levels:int = arr[i].getLevel();
+			var types:String;
+			var levels:int;
 			
 			for(var i:int = 0 ; i< arr.length; i++){
+				
 				if(arr[i].getLevel() > 0 && arr[i].getLevel() < 5){
 
-					var obj:Object 	= model.getPictures()
+					var obj:Object 	= model.getPictures();
+					
 					types 			= arr[i].getType();
 					levels 			= arr[i].getLevel();
 					
+					trace(i+" types "+types+"/level+1 "+(levels+1));
+					
 					if(obj[types+"/"+(levels+1)]){
 					// загрузить картинку с хранилища.
+						var bd:BitmapData = obj[types+"/"+(levels+1)].bitmapData.clone();
+						var bm:Bitmap = new Bitmap(bd);
 						
-						model.addImagePlant(obj[types+"/"+(levels+1)], int(i), obj[types]);
+						model.addImagePlant(bm, int(i), types);
 					
 					}else{
 						oldStage[i] = new Array(types,(levels+1));
 						loadPic(i.toString(), oldStage[i][0], oldStage[i][1]);
 					}
+					
 				}
 			}
 		}
+
 		
 		public function clearPlant():void
 		{
@@ -103,11 +118,23 @@ package mvc
 			model.getLandArray()[lastPressed].clearType();
 		}
 		
+		public function fromServer(data:*):void
+		{
+			trace("fromserver "+data);
+		}
+		
+		
+		
+		
 		private function loadbg():void
 		{
+			var context:LoaderContext = new LoaderContext();
+			//context.applicationDomain = ApplicationDomain.currentDomain;
+			context.checkPolicyFile = true; 
+			
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, bgComplete);
-			loader.load(new URLRequest("lib/BG.jpg"));
+			loader.load(new URLRequest("lib/BG.jpg"),context);
 		}
 		private function bgComplete(e:Event):void
 		{
@@ -216,16 +243,23 @@ package mvc
 			}
 		}
 		
-		
+		private function createConnection():void
+		{
+			connection = new Connection(fromServer);
+		}
 		
 		private function loadPic(_ind:String, _type:String, level:int = 1):void
 		{
+			var context:LoaderContext = new LoaderContext();
+			//context.applicationDomain = ApplicationDomain.currentDomain;
+			context.checkPolicyFile = true; 
+			
 			var loader:Loader = new Loader();
 			loader.name = _ind;
 			oldStage[_ind] = new Array(_type, level);
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, pictComplete);
 			loader.contentLoaderInfo.addEventListener(ErrorEvent.ERROR, pictError);
-			loader.load(new URLRequest("lib/"+_type+"/"+level+".png"));
+			loader.load(new URLRequest("lib/"+_type+"/"+level+".png"),context);
 		}
 		private function pictComplete(e:Event):void
 		{

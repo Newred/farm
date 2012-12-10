@@ -22,6 +22,7 @@ package mvc
 		private var container:Sprite;
 		private var uicontainer:Sprite;
 		private var btnLevelUp:Button;
+		private var btnConnect:Button;
 
 		
 		public function View(_model:Model, _controller:Controller, _target:Stage)

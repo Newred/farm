@@ -8,6 +8,7 @@ package ui
 	import flash.filters.BlurFilter;
 	import flash.filters.GlowFilter;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	public class Button extends MovieClip
 	{
@@ -21,10 +22,13 @@ package ui
 		{
 			tf = new TextField();
 			tf.text = label;
+			var tfr:TextFormat = new TextFormat(null,null,null,null,null,null,null,null,"center"); 
+
+			tf.setTextFormat(tfr);
 			tf.selectable = false;
 			tf.mouseEnabled = false;
 			tf.y = 5; 
-			tf.width = 100; // fix 
+			tf.width = 84; // fix 
 			tf.height = 20; // fix 
 			init();
 		}
