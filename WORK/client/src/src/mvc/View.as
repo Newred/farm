@@ -61,6 +61,7 @@ package mvc
 			model.addEventListener("moveLand", moveLand);
 			model.addEventListener("addPlant", addPlant);
 			model.addEventListener("typePlant", typePlant);
+			model.addEventListener("addClearPlant", addClearPlant);
 		}
 		
 		private function createBtn():void
@@ -104,6 +105,13 @@ package mvc
 			e.param.type.x = mouseX -40;
 			e.param.type.y = mouseY -60;
 			uicontainer.addChild(e.param.type);
+		}
+		
+		private function addClearPlant(e:GameEvent):void
+		{
+			e.param.btn.x = mouseX;
+			e.param.btn.y = mouseY;
+			uicontainer.addChild(e.param.btn);
 		}
 	}
 }

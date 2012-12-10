@@ -9,6 +9,8 @@ package mvc
 	
 	import plant.Plant;
 	
+	import ui.Button;
+	import ui.ButtonClear;
 	import ui.TypePlant;
 	
 	public class Model extends Sprite
@@ -18,6 +20,7 @@ package mvc
 		private var landContainer:Sprite = new Sprite();
 		private var landArray:Array = new Array();
 		private var type:TypePlant = new TypePlant(); // всплывающее окно выбора нового растения
+		private var btnClear:ButtonClear = new ButtonClear("собрать");
 		private var oPicture:Array = new Array(); 
 		
 		public function Model(){
@@ -33,7 +36,7 @@ package mvc
 		}
 		public function setPicture(bm:Bitmap, typeP:String, levelP:int):void
 		{
-			trace("typeP/levelP "+typeP+"/"+levelP);
+			trace("запись в кеш: type/level "+typeP+"/"+levelP);
 			 oPicture[typeP+"/"+levelP] = bm;
 		}
 		public function getPictures():Object{
@@ -81,6 +84,12 @@ package mvc
 		}
 		public function addImagePlant(_bm:Bitmap, ind:int, _type:String):void{
 			landArray[ind].addImage(_bm, _type);
+		}
+		public function addCleaner():void{
+			toView("addClearPlant","",{"btn":btnClear});
+		}
+		public function getClearBtn():ButtonClear{
+			return btnClear;
 		}
 		
 		

@@ -21,7 +21,7 @@ package mvc
 		private var model:Model;
 		private var bMouseDown:Boolean = false;
 
-		private var oldStage:Object = {};
+		private var oldStage:Object = {}; // magic temp object
 		private var xx:int; //разница между положением бекграунад и нажатием мышки
 		private var yy:int;
 		private var lastPressed:int = 0;
@@ -53,6 +53,7 @@ package mvc
 			
 			if( obj[oldStage[_id][0]+"/"+oldStage[_id][1]] != obj["undefined"])
 			{
+				trace("choosePlant: Изображения есть");
 				var bd:BitmapData = obj[oldStage[_id][0]+"/"+oldStage[_id][1]].bitmapData.clone();
 				var bm:Bitmap = new Bitmap(bd);
 				model.addImagePlant(bm, int(_id), oldStage[_id][0]);
@@ -64,45 +65,42 @@ package mvc
 			}
 		}
 		
-		public function loadedPlant(id:String):void
+		/*public function loadedPlant(id:String):void
 		{
 			//model.addImagePlant("bm", id);
-		}
+		}*/
 		
 		public function levelUP():void
 		{
 			trace("level up");
 			var arr:Array = model.getLandArray(); // получить список полей.
-				
+			var types:String = arr[i].getType();
+			var levels:int = arr[i].getLevel();
+			
 			for(var i:int = 0 ; i< arr.length; i++){
 				if(arr[i].getLevel() > 0 && arr[i].getLevel() < 5){
-					trace(arr[i].getLevel()); // вывести уровни.
-					// id, level
+
+					var obj:Object 	= model.getPictures()
+					types 			= arr[i].getType();
+					levels 			= arr[i].getLevel();
 					
-					
-					arr[i].LevelUP(5);
-					
-					
-					var obj:Object = model.getPictures()
-					
-					if(obj[arr[i].getType()+"/"+arr[i].getLevel()]){
+					if(obj[types+"/"+(levels+1)]){
 					// загрузить картинку с хранилища.
-						trace(" доступна "+arr[i].getType()+"/"+arr[i].getLevel());
+						
+						model.addImagePlant(obj[types+"/"+(levels+1)], int(i), obj[types]);
+					
 					}else{
-						trace(" загрузка изображений по росту ");
-						
-						// создать персональный лоадер.
-						oldStage[i] = new Array(arr[i].getType(),arr[i].getLevel());
+						oldStage[i] = new Array(types,(levels+1));
 						loadPic(i.toString(), oldStage[i][0], oldStage[i][1]);
-						
-						// load картинку
-						// цикл ждёт
-						// картинка загружена.
-						// цикл продолжить.
-						
 					}
 				}
 			}
+		}
+		
+		public function clearPlant():void
+		{
+			trace("удаление ");
+			model.getLandArray()[lastPressed].clearType();
 		}
 		
 		private function loadbg():void
@@ -126,6 +124,8 @@ package mvc
 			target.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
 			target.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
 			target.addEventListener(MouseEvent.MOUSE_UP, mouseUp);
+			target.addEventListener(MouseEvent.MOUSE_OVER, mouseover);
+			target.addEventListener(MouseEvent.MOUSE_OUT, mouseout);
 		}
 		
 		private function mouseMove(e:MouseEvent):void
@@ -162,16 +162,40 @@ package mvc
 				lastPressed = e.target.getID();
 				model.viewTypePlant();// задать выбор растения
 				}else{
-					if(e.target.getID() == 5){
-						trace("Добавить уборщик поля");
+					trace(e.target.getLevel());
+					if(e.target.getLevel() == 5){
+						lastPressed = e.target.getID();
+						model.addCleaner();
 					}
 				}
-			}else{
-				if(model.getTypePlant().parent){
+			}else if( e.target.toString() == "[object ButtonClear]"){
+				
+				//lastPressed = e.target.getID();
+				clearPlant();
+				model.getClearBtn().remove();
+				
+				}else{
+				trace("else");
+				if(model.getTypePlant().parent)
 					model.getTypePlant().remove();
-				}
+				
+				if(model.getClearBtn().parent)
+					model.getClearBtn().remove();
+				
 			}
 		}	
+		
+		private function mouseover(e:MouseEvent):void{
+			if(e.target.toString() == "[object Plant]"){
+				e.target.mouseover();
+			}
+		}
+		
+		private function mouseout(e:MouseEvent):void{
+			if(e.target.toString() == "[object Plant]"){
+				e.target.mouseout();
+			}
+		}
 		
 /*==========================================
 =============== end Mouse control ==========

@@ -41,6 +41,7 @@ package ui
 			addEventListener(MouseEvent.MOUSE_OVER, mouseover);
 			addEventListener(MouseEvent.MOUSE_OUT, mouseout);
 			addEventListener(MouseEvent.MOUSE_DOWN, mousedown);
+			addEventListener(MouseEvent.MOUSE_UP, mouseout);
 		}
 		
 	

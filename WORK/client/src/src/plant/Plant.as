@@ -19,6 +19,7 @@ package plant
 		private var image:Bitmap;
 		private var level:int = 0;
 		private var type:String;
+		private var bmContainer:Sprite;
 		
 		public function Plant(xx:int, yy:int)
 		{
@@ -26,6 +27,7 @@ package plant
 			y = yy;
 			drawPlant();
 			createListener();
+			createImageContainer();
 		}
 		
 		private function drawPlant():void
@@ -40,15 +42,24 @@ package plant
 		
 		private function createListener():void
 		{
-			addEventListener(MouseEvent.MOUSE_OVER, mouseover);
-			addEventListener(MouseEvent.MOUSE_OUT, mouseout);
+			//addEventListener(MouseEvent.MOUSE_OVER, mouseover);
+			//addEventListener(MouseEvent.MOUSE_OUT, mouseout);
+			//addEventListener(MouseEvent.MOUSE_MOVE, mousemove);
 		}
 		
-		private function mouseover(e:MouseEvent):void{
+		private function createImageContainer():void
+		{
+			bmContainer = new Sprite();
+			addChild(bmContainer);
+			bmContainer.mouseEnabled = false;
+			bmContainer.mouseChildren = false;
+		}
+		
+		public function mouseover():void{
 			filters = [new GlowFilter(0xFFCC44)];
 		}
 		
-		private function mouseout(e:MouseEvent):void{
+		public function mouseout():void{
 			filters = null ;
 		}
 		
@@ -61,24 +72,22 @@ package plant
 		}
 		
 		public function addImage(bm:Bitmap, _type:String):void{
-			trace(this.width);
-			trace(this.height);
-			
-			trace(bm.width);
-			trace(bm.height);
-			
+
 			if(image && image.parent)
-				removeChild(image);
-			
+				removeImage();
+		
 			image   = bm ;
-			image.y = -27;
+			image.y = height - bm.height - 27;
 			
 			type = _type;
-			level = 1;
-			addChild(image);
+			if(level < 5) level ++;
+			bmContainer.addChild(image);
 		}
+		
 		public function removeImage():void{
-			removeChild(image);
+			while(bmContainer.numChildren){
+				bmContainer.removeChildAt(0);
+			}
 		}
 		public function isLevel():Boolean{
 			return (level) ? true : false ; 
@@ -89,8 +98,14 @@ package plant
 		public function getType():String{
 			return type;
 		}
-		public function LevelUP(max:int):void{
+		public function levelUP(max:int = 5):void{
 			if(level < max) level ++;	
+		}
+		public function clearType():void
+		{
+			level = 0;
+			removeImage();
+			image = null;
 		}
 		
 	}
