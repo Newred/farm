@@ -121,19 +121,15 @@ package mvc
 		
 		public function fromServer(data:String):void
 		{
-			toDisplay("C: fromserver "+data);
+			//toDisplay("C: fromserver "+data);
 			
-			if(data == "hello" && !security){
-				toServer("<policy-file-request/>");
-				trace("послали пакет");
-			}else if(data == "<cross-domain-policy><allow-access-from domain='*' to-ports='9876'/></cross-domain-policy>")
-			{
-				security = true;
-				
-				//toDisplay("разорвать соединение.");
-				//conToServer.closeCon();
-				//createConnection();
-				toDisplay("createConnection");
+			if(data == "hello"){
+				toServer("info");
+			}else{
+				toDisplay(data);
+				var xml:XML = XML(data);
+				//toDisplay(xml);
+				toDisplay("999");
 			}
 				
 		}

@@ -59,13 +59,13 @@ public class Connect extends Thread {
 			
 			String line = null;
 			
-			sendClient("hello");
+			toClient("hello");
 			
 			while(true)
 			{
 				line = in.readUTF();
 				textArea.append("\n"+line);
-				monitorData(line);
+				fromClient(line);
 			}
 			
 			
@@ -89,17 +89,15 @@ public class Connect extends Thread {
 		}
 	}
 	
-	private void monitorData(String data)
-	{
-		if(data.equals("<policy-file-request/>")){
-			sendClient("<cross-domain-policy><allow-access-from domain='*' to-ports='9876'/></cross-domain-policy>");
-		}
+	private void fromClient(String data){
+		frameVille.fromClient(data);
 	}
 	
-	private void sendClient(String data){
+	public void toClient(String data){
 		
 		try {
 			out.writeUTF(data);
+			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

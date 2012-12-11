@@ -92,9 +92,10 @@ public class FrameVille extends JFrame {
 		public void actionPerformed(ActionEvent e) {	
 			textArea.append("\n1. подключится к базе данных");
 			textArea.append("\n2. создать connection к клиенту!");
-			btnOFF.setEnabled(true);
+			btnOFF.setEnabled(false);
 			btnON.setEnabled(false);
 			createConnection();
+			//createDBconnect();
 		}
 	};
 	
@@ -112,7 +113,20 @@ public class FrameVille extends JFrame {
 
 	private void createDBconnect()
 	{
-		
+		DBconnect db = new DBconnect(this);
+	}
+	
+	
+	public void fromClient(String data){
+		// запрос на инфо
+		if(data.equals("info"))
+		{
+			createDBconnect();
+		}
+	}
+	
+	public void sendToClient(String data){
+		connection.toClient(data);
 	}
 
 	private void createConnection()
@@ -139,6 +153,5 @@ public class FrameVille extends JFrame {
 	public void lostConnection(){
 		//removeConnection();
 		createConnection();
-		createDBconnect();
 	}
 }
