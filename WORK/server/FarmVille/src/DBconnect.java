@@ -35,7 +35,7 @@ public class DBconnect {
 			parseResult(resultset);
 			
 		} catch (ClassNotFoundException e) {
-			System.out.println("Driver не найден");
+			System.out.println("Driver mysql не найден");
 		}catch (SQLException e) { e.printStackTrace(); }
 	}
 	
@@ -50,7 +50,7 @@ public class DBconnect {
 			while(rs.next())
 			{
 				String str = "<"+rs.getString("type")+
-						"id='"+rs.getInt("id")+
+						" id='"+rs.getInt("id")+
 						"' x='"+rs.getInt("x")+
 						"' y='"+rs.getInt("y")+
 						"' process_end='"+rs.getInt("process_end")+"' />";
@@ -68,5 +68,38 @@ public class DBconnect {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void addPlant(String [] data){
+		
+		try {
+			statement.executeUpdate("INSERT INTO `user` ( `type` , `x` , `y` , `process_end` ) VALUES ('"+
+		data[1]+"', "+data[2]+", "+data[3]+", "+data[4]+")");
+			
+			//selectThis(data);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addLevels(){
+		try {
+			statement.executeUpdate("UPDATE `user` SET `process_end`= `process_end`+ 1 WHERE `process_end` < 1312345");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void selectThis(String [] data){
+		
+		try {
+			resultset = statement.executeQuery("");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		parseResult(resultset);
 	}
 }

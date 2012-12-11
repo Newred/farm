@@ -64,7 +64,7 @@ public class Connect extends Thread {
 			while(true)
 			{
 				line = in.readUTF();
-				textArea.append("\n"+line);
+				//textArea.append("\n"+line);
 				fromClient(line);
 			}
 			
@@ -90,11 +90,12 @@ public class Connect extends Thread {
 	}
 	
 	private void fromClient(String data){
+		textArea.append("\nfromClient: \n"+data);
 		frameVille.fromClient(data);
 	}
 	
 	public void toClient(String data){
-		
+		textArea.append("\nsendClient: \n"+data);
 		try {
 			out.writeUTF(data);
 			out.flush();

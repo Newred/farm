@@ -28,6 +28,8 @@ public class FrameVille extends JFrame {
 	private ServerSocket ss;
 	private int port = 9876;
 	private Connect connection;
+	private String comand [];
+	private DBconnect db;
 
 	/**
 	 * Launch the application.
@@ -67,6 +69,7 @@ public class FrameVille extends JFrame {
 		textArea = new JTextArea();
 		JScrollPane sc = new JScrollPane(textArea);
 		sc.setBounds(10, 59, 414, 192);
+		textArea.setLineWrap(true);
 		contentPane.add(sc);
 		
 		btnON = new JButton("Подключить");
@@ -90,8 +93,8 @@ public class FrameVille extends JFrame {
 	private ActionListener btnONClick = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {	
-			textArea.append("\n1. подключится к базе данных");
-			textArea.append("\n2. создать connection к клиенту!");
+			//textArea.append("\n1. подключится к базе данных");
+			//textArea.append("\n2. создать connection к клиенту!");
 			btnOFF.setEnabled(false);
 			btnON.setEnabled(false);
 			createConnection();
@@ -111,9 +114,11 @@ public class FrameVille extends JFrame {
 
 
 
+
+
 	private void createDBconnect()
 	{
-		DBconnect db = new DBconnect(this);
+		db = new DBconnect(this);
 	}
 	
 	
@@ -122,6 +127,21 @@ public class FrameVille extends JFrame {
 		if(data.equals("info"))
 		{
 			createDBconnect();
+		}else{
+			comand = data.split("/");
+			
+			switch (comand[0]) {
+			case "addPlant":
+				db.addPlant(comand);
+				break;
+
+			default:
+				textArea.append("\nОшибка, Неизвестная команда клиента: "+comand[0]);
+				break;
+			}
+			
+			
+			
 		}
 	}
 	
@@ -142,12 +162,6 @@ public class FrameVille extends JFrame {
 	{
 		connection.remove();
 		connection = null;
-	}
-	
-	
-	public void SendInfo(String data)
-	{
-		textArea.append("SendInfo "+data);
 	}
 	
 	public void lostConnection(){

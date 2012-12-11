@@ -13,6 +13,7 @@ package mvc
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
+	import flash.net.sendToURL;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	
@@ -44,7 +45,7 @@ package mvc
 		{
 			loadbg();
 			createListener(target);
-			createPlant();
+			//createPlant();
 			//createConnection();
 		}
 		
@@ -56,7 +57,7 @@ package mvc
 			if(_id == ""){
 				_id = lastPressed.toString();
 				oldStage[_id] = new Array(_type, lastLevel);
-				
+				userChoose(_type,_id);
 			}
 			
 			if( obj[oldStage[_id][0]+"/"+oldStage[_id][1]] != obj["undefined"])
@@ -71,6 +72,22 @@ package mvc
 				lastLevel = 1;
 				loadPic(lastPressed.toString(),lastType);
 			}
+			
+			//toDisplay("id: "+_id+" "+model.getLandArray()[_id].x+" "+model.getLandArray()[_id].y);
+			
+			
+		}
+		
+		private function userChoose(_type:String, _id:String):void{
+			
+			var comand:String;
+			comand = "addPlant/"+_type+"/"+
+				model.getLandArray()[_id].x+"/"+
+				model.getLandArray()[_id].y;
+			
+			toDisplay(comand);
+			toServer(comand);
+			
 		}
 		
 		/*public function loadedPlant(id:String):void
@@ -125,11 +142,39 @@ package mvc
 			
 			if(data == "hello"){
 				toServer("info");
+				createPlant();
 			}else{
-				toDisplay(data);
-				var xml:XML = XML(data);
+				//toDisplay(data);
+				var xml:XMLList = XMLList(data);
 				//toDisplay(xml);
-				toDisplay("999");
+				toDisplay(xml.children().children());
+				
+			var tempXml:XMLList;
+			var tempStr:String;
+			
+			var type:String;
+			var id:int;
+			var xx:int;
+			var yy:int;
+			var process_end:int;
+			
+				for(var i:int= 0 ; i< xml.children().children().length(); i++){
+					tempStr = xml.children().children()[i].toXMLString();
+					tempXml = XMLList(tempStr);
+					toDisplay(i.toString()+" "+tempXml.name());
+					
+					// полученный обьект.
+					// посадить на поле );
+					// перевести координаты растения в id ячейки.
+					type = tempXml.name();
+					id = tempXml.@id;
+					xx = tempXml.@x;
+					yy = tempXml.@y;
+					process_end = tempXml.@process_end;
+					
+				}
+		//	toDisplay("list[0] "+xml.children().children()[0].toXMLString());
+			
 			}
 				
 		}
@@ -140,6 +185,7 @@ package mvc
 		
 		private function toServer(data:String):void
 		{
+			toDisplay("toServer: "+data);
 			conToServer.toServer(data);
 		}
 		

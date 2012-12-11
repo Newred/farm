@@ -19,7 +19,7 @@ package connection
 		public function toServer(data:String):void
 		{
 			socket.writeUTF(data);
-			socket.writeByte(0);
+			//socket.writeByte(0);
 			socket.flush();
 		}
 		
