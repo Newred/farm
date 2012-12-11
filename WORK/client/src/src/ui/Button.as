@@ -33,19 +33,39 @@ package ui
 			init();
 		}
 		
+		public function enableBtn(bool:Boolean):void
+		{
+			if(bool){
+				createListener();
+				alpha = 1;
+			}else{
+				removeListener();
+				alpha = 0.5;
+			}
+		}
+		
 		private function init():void
 		{
 			createFrame();
 			createListener();
-			buttonMode = true ;
+			
 		}
 		
 		private function createListener():void
 		{
+			buttonMode = true ;
 			addEventListener(MouseEvent.MOUSE_OVER, mouseover);
 			addEventListener(MouseEvent.MOUSE_OUT, mouseout);
 			addEventListener(MouseEvent.MOUSE_DOWN, mousedown);
 			addEventListener(MouseEvent.MOUSE_UP, mouseout);
+		}
+		private function removeListener():void
+		{
+			buttonMode = false;
+			removeEventListener(MouseEvent.MOUSE_OVER, mouseover);
+			removeEventListener(MouseEvent.MOUSE_OUT, mouseout);
+			removeEventListener(MouseEvent.MOUSE_DOWN, mousedown);
+			removeEventListener(MouseEvent.MOUSE_UP, mouseout);
 		}
 		
 	

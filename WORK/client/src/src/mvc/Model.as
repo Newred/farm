@@ -92,7 +92,10 @@ package mvc
 			return btnClear;
 		}
 		
-		
+		public function setText(data:String):void
+		{
+			toView("setText",data,"");
+		}
 		
 		
 		

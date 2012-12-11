@@ -32,7 +32,8 @@ package mvc
 		private var lastType:String = "";
 		private var lastLevel:int = 1;
 
-		private var connection:Connection;
+		private var conToServer:Connection;
+		private var security:Boolean = false;
 		
 		public function Controller(_model:Model)
 		{
@@ -44,7 +45,7 @@ package mvc
 			loadbg();
 			createListener(target);
 			createPlant();
-			createConnection();
+			//createConnection();
 		}
 		
 		public function choosePlant( _type:String, _id:String=""):void
@@ -118,12 +119,40 @@ package mvc
 			model.getLandArray()[lastPressed].clearType();
 		}
 		
-		public function fromServer(data:*):void
+		public function fromServer(data:String):void
 		{
-			trace("fromserver "+data);
+			toDisplay("C: fromserver "+data);
+			
+			if(data == "hello" && !security){
+				toServer("<policy-file-request/>");
+				trace("послали пакет");
+			}else if(data == "<cross-domain-policy><allow-access-from domain='*' to-ports='9876'/></cross-domain-policy>")
+			{
+				security = true;
+				
+				//toDisplay("разорвать соединение.");
+				//conToServer.closeCon();
+				//createConnection();
+				toDisplay("createConnection");
+			}
+				
+		}
+		
+		private function toDisplay(data:String):void{
+			model.setText(data);
+		}
+		
+		private function toServer(data:String):void
+		{
+			conToServer.toServer(data);
 		}
 		
 		
+		public function createConnection():void
+		{
+			if(conToServer) conToServer = null;
+			conToServer = new Connection(fromServer);
+		}
 		
 		
 		private function loadbg():void
@@ -241,11 +270,6 @@ package mvc
 				pl.setID(i);
 				model.setLand(pl);
 			}
-		}
-		
-		private function createConnection():void
-		{
-			connection = new Connection(fromServer);
 		}
 		
 		private function loadPic(_ind:String, _type:String, level:int = 1):void
