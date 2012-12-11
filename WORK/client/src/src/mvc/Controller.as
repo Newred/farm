@@ -287,8 +287,15 @@ package mvc
 			
 			var loader:Loader = new Loader();
 			loader.name = _ind;
+			toDisplay("oldStage[_ind] "+oldStage[_ind])
+			if(oldStage[_ind] != oldStage["undefined"]){
+				oldStage[_ind][0] = _type;
+				oldStage[_ind][1] = level;
+			}else{
+				oldStage[_ind] = new Array(_type, level);
+			}
 			
-			oldStage[_ind] = new Array(_type, level);
+			toDisplay("oldStage[_ind] "+oldStage[_ind])
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, pictComplete);
 			loader.contentLoaderInfo.addEventListener(ErrorEvent.ERROR, pictError);
 			loader.load(new URLRequest("lib/"+_type+"/"+level+".png"),context);

@@ -1,6 +1,7 @@
 package connection
 {
 	import flash.display.Sprite;
+	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.Socket;
@@ -35,19 +36,28 @@ package connection
 		{
 			socket = new Socket("localhost",9876);
 			socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityError);
+			socket.addEventListener(IOErrorEvent.IO_ERROR, ioerror);
 			socket.addEventListener(ProgressEvent.SOCKET_DATA, socketdata);
 		}
 		
 		protected function socketdata(e:ProgressEvent):void
 		{
 			//trace("socketdata");
+			try{
 			var str:String = socket.readUTF();
 			toController(str);
+			}catch(e:SecurityErrorEvent){};
 		}
 		
 		protected function securityError(e:SecurityErrorEvent):void
 		{
 			trace("securityError");
 		}
+		
+		protected function ioerror(e:IOErrorEvent):void
+		{
+			
+		}
+				
 	}
 }
