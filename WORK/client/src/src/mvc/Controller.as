@@ -20,6 +20,8 @@ package mvc
 	import plant.Plant;
 	
 	import ui.TypePlant;
+	
+	import util.CoordinateConvector;
 
 	public class Controller extends Sprite
 	{
@@ -35,6 +37,7 @@ package mvc
 
 		private var conToServer:Connection;
 		private var security:Boolean = false;
+		private var converter:CoordinateConvector = new CoordinateConvector();
 		
 		public function Controller(_model:Model)
 		{
@@ -49,28 +52,27 @@ package mvc
 			//createConnection();
 		}
 		
-		public function choosePlant( _type:String, _id:String=""):void
+		public function choosePlant( _type:String, _id:String="", _level:int = 1):void
 		{
 			// проверить или изображение есть в библиотеке.
 			var obj:Object = model.getPictures();
-
 			if(_id == ""){
 				_id = lastPressed.toString();
 				oldStage[_id] = new Array(_type, lastLevel);
 				userChoose(_type,_id);
 			}
-			
-			if( obj[oldStage[_id][0]+"/"+oldStage[_id][1]] != obj["undefined"])
+
+			if(oldStage[_id] != oldStage["undefined"] && obj[oldStage[_id][0]+"/"+oldStage[_id][1]] != obj["undefined"])
 			{
 				trace("choosePlant: Изображения есть");
 				var bd:BitmapData = obj[oldStage[_id][0]+"/"+oldStage[_id][1]].bitmapData.clone();
 				var bm:Bitmap = new Bitmap(bd);
-				model.addImagePlant(bm, int(_id), oldStage[_id][0]);
+				model.addImagePlant(bm, int(_id), oldStage[_id][0],oldStage[_id][1]);
 			}else{
 				trace("choosePlant: Изображения нет");
 				lastType = _type;
 				lastLevel = 1;
-				loadPic(lastPressed.toString(),lastType);
+				loadPic(lastPressed.toString(), lastType, _level);
 			}
 			
 			//toDisplay("id: "+_id+" "+model.getLandArray()[_id].x+" "+model.getLandArray()[_id].y);
@@ -97,7 +99,8 @@ package mvc
 		
 		public function levelUP():void
 		{
-			trace("level up");
+			toServer("addLevels");	
+			/*
 			var arr:Array = model.getLandArray(); // получить список полей.
 			var types:String;
 			var levels:int;
@@ -124,9 +127,8 @@ package mvc
 						oldStage[i] = new Array(types,(levels+1));
 						loadPic(i.toString(), oldStage[i][0], oldStage[i][1]);
 					}
-					
 				}
-			}
+			}*/
 		}
 
 		
@@ -134,6 +136,7 @@ package mvc
 		{
 			trace("удаление ");
 			model.getLandArray()[lastPressed].clearType();
+			toServer("clearPlant"+"/"+oldStage[lastPressed][2]);
 		}
 		
 		public function fromServer(data:String):void
@@ -153,10 +156,10 @@ package mvc
 			var tempStr:String;
 			
 			var type:String;
-			var id:int;
+			var dbID:int;
 			var xx:int;
 			var yy:int;
-			var process_end:int;
+			var pr_end:String;
 			
 				for(var i:int= 0 ; i< xml.children().children().length(); i++){
 					tempStr = xml.children().children()[i].toXMLString();
@@ -166,13 +169,25 @@ package mvc
 					// полученный обьект.
 					// посадить на поле );
 					// перевести координаты растения в id ячейки.
-					type = tempXml.name();
-					id = tempXml.@id;
-					xx = tempXml.@x;
-					yy = tempXml.@y;
-					process_end = tempXml.@process_end;
+					
+					
+					
+					type 	= tempXml.name();
+					dbID 	= tempXml.@id;
+					xx 		= tempXml.@x;
+					yy 		= tempXml.@y;
+					pr_end  = tempXml.@process_end;
+					
+					var str:String = pr_end.substr(6);
+					lastLevel = int(str);
+					oldStage[i] = new Array(type, lastLevel, dbID);
+					toDisplay("type "+type+ " lastLevel "+lastLevel );
+					var plantID:String = converter.convertXYtoPlantID(xx,yy);
+					toDisplay("plantID "+plantID);
+					choosePlant(type, plantID, int(str));
 					
 				}
+					
 		//	toDisplay("list[0] "+xml.children().children()[0].toXMLString());
 			
 			}

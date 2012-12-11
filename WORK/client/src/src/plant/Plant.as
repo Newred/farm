@@ -71,7 +71,7 @@ package plant
 			return ID;
 		}
 		
-		public function addImage(bm:Bitmap, _type:String):void{
+		public function addImage(bm:Bitmap, _type:String, _level:int):void{
 
 			if(image && image.parent)
 				removeImage();
@@ -80,7 +80,8 @@ package plant
 			image.y = height - bm.height - 27;
 			
 			type = _type;
-			if(level < 5) level ++;
+			level = _level;
+			//if(level < 5) level ++;
 			bmContainer.addChild(image);
 		}
 		

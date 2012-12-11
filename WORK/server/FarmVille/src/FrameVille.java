@@ -123,7 +123,7 @@ public class FrameVille extends JFrame {
 	
 	
 	public void fromClient(String data){
-		// запрос на инфо
+		// первое подключение
 		if(data.equals("info"))
 		{
 			createDBconnect();
@@ -134,7 +134,12 @@ public class FrameVille extends JFrame {
 			case "addPlant":
 				db.addPlant(comand);
 				break;
-
+			case "addLevels":
+				db.addLevels();
+				break;
+			case "clearPlant":
+				db.clearPlant(comand);
+				break;
 			default:
 				textArea.append("\nОшибка, Неизвестная команда клиента: "+comand[0]);
 				break;

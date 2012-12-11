@@ -21,7 +21,7 @@ package mvc
 		private var landArray:Array = new Array();
 		private var type:TypePlant = new TypePlant(); // всплывающее окно выбора нового растения
 		private var btnClear:ButtonClear = new ButtonClear("собрать");
-		private var oPicture:Array = new Array(); 
+		private var oPicture:Object = new Object(); 
 		
 		public function Model(){
 			trace("Model ok");
@@ -82,8 +82,8 @@ package mvc
 		public function getTypePlant():TypePlant{
 			return type ;
 		}
-		public function addImagePlant(_bm:Bitmap, ind:int, _type:String):void{
-			landArray[ind].addImage(_bm, _type);
+		public function addImagePlant(_bm:Bitmap, ind:int, _type:String, _level:int):void{
+			landArray[ind].addImage(_bm, _type, _level);
 		}
 		public function addCleaner():void{
 			toView("addClearPlant","",{"btn":btnClear});

@@ -41,9 +41,7 @@ public class DBconnect {
 	
 	private void parseResult(ResultSet rs)
 	{
-		
 		String answer;
-		
 		answer = "<country ><field zero_x='0' zero_y='0' size_x='60' size_y='60'>";
 		try {
 		
@@ -57,26 +55,28 @@ public class DBconnect {
 				answer += str;
 			}
 			answer += "</field></country>";
-			
-			//System.out.println("xml: "+answer);
-			
 			frameVille.sendToClient(answer);
 			
-			//statement.executeUpdate("UPDATE `farm`.`user` SET `money` = "+(rs.getDouble("money")+100)+" WHERE `table1`.`name` ='Тина'");
-
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	public void clearPlant(String [] data){
+		try {
+			statement.executeUpdate("DELETE FROM `user` WHERE `id` = "+data[1]);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	public void addPlant(String [] data){
 		
 		try {
-			statement.executeUpdate("INSERT INTO `user` ( `type` , `x` , `y` , `process_end` ) VALUES ('"+
-		data[1]+"', "+data[2]+", "+data[3]+", "+data[4]+")");
 			
-			//selectThis(data);
+			statement.executeUpdate("INSERT INTO `user` ( `type` , `x` , `y` , `process_end` ) VALUES ('"+
+		data[1]+"', "+data[2]+", "+data[3]+", "+1312341+")");
+			
+			selectThis(data);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -85,6 +85,9 @@ public class DBconnect {
 	public void addLevels(){
 		try {
 			statement.executeUpdate("UPDATE `user` SET `process_end`= `process_end`+ 1 WHERE `process_end` < 1312345");
+			resultset = statement.executeQuery("SELECT * FROM user");
+			parseResult(resultset);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -95,7 +98,8 @@ public class DBconnect {
 	private void selectThis(String [] data){
 		
 		try {
-			resultset = statement.executeQuery("");
+			resultset = statement.executeQuery("SELECT `id`, `type`, `x`, `y`, `process_end` FROM `user` WHERE 'x' = "+data[2]+" 'y'= "+data[3]+"");
+			parseResult(resultset);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
