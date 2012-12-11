@@ -98,12 +98,12 @@ public class DBconnect {
 	private void selectThis(String [] data){
 		
 		try {
-			resultset = statement.executeQuery("SELECT `id`, `type`, `x`, `y`, `process_end` FROM `user` WHERE 'x' = "+data[2]+" 'y'= "+data[3]+"");
+			resultset = statement.executeQuery("SELECT * FROM `user` WHERE `x` = "+data[2]+" and `y`= "+data[3]);
 			parseResult(resultset);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		parseResult(resultset);
+		//parseResult(resultset);
 	}
 }

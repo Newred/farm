@@ -24,7 +24,7 @@ package mvc
 		private var oPicture:Object = new Object(); 
 		
 		public function Model(){
-			trace("Model ok");
+			//trace("Model ok");
 		}
 		
 		public function setBG(_bg:Bitmap):void{ 
@@ -36,18 +36,16 @@ package mvc
 		}
 		public function setPicture(bm:Bitmap, typeP:String, levelP:int):void
 		{
-			trace("запись в кеш: type/level "+typeP+"/"+levelP);
+			//trace("запись изображения в кеш: type/level "+typeP+"/"+levelP);
 			 oPicture[typeP+"/"+levelP] = bm;
 		}
 		public function getPictures():Object{
 			return oPicture;
 		}
 		
-		
 		public function getLandXY():Object{
 			return landXY;
 		}
-		
 		
 		public function setLand(plant:Plant):void{	
 			landArray.push(plant);
@@ -92,17 +90,10 @@ package mvc
 			return btnClear;
 		}
 		
-		public function setText(data:String):void
-		{
+		public function setText(data:String):void{
 			toView("setText",data,"");
 		}
-		
-		
-		
-		
-		
-		
-		
+
 		private function toView(func:String, window:String, param:Object):void{
 			dispatchEvent(new GameEvent(func,false,false,window,param));
 		}

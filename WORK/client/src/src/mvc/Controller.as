@@ -30,7 +30,7 @@ package mvc
 
 		private var oldStage:Object = {}; // magic temp object
 		private var xx:int; //разница между положением бекграунад и нажатием мышки
-		private var yy:int;
+		private var yy:int; // drag and drop
 		private var lastPressed:int = 0;
 		private var lastType:String = "";
 		private var lastLevel:int = 1;
@@ -54,30 +54,25 @@ package mvc
 		
 		public function choosePlant( _type:String, _id:String="", _level:int = 1):void
 		{
-			// проверить или изображение есть в библиотеке.
+			
 			var obj:Object = model.getPictures();
 			if(_id == ""){
 				_id = lastPressed.toString();
-				oldStage[_id] = new Array(_type, lastLevel);
 				userChoose(_type,_id);
 			}
 
 			if(oldStage[_id] != oldStage["undefined"] && obj[oldStage[_id][0]+"/"+oldStage[_id][1]] != obj["undefined"])
 			{
-				trace("choosePlant: Изображения есть");
+				//trace("choosePlant: Изображения есть (кеш)");
 				var bd:BitmapData = obj[oldStage[_id][0]+"/"+oldStage[_id][1]].bitmapData.clone();
 				var bm:Bitmap = new Bitmap(bd);
 				model.addImagePlant(bm, int(_id), oldStage[_id][0],oldStage[_id][1]);
 			}else{
-				trace("choosePlant: Изображения нет");
+				//trace("choosePlant: Изображения нет");
 				lastType = _type;
 				lastLevel = 1;
-				loadPic(lastPressed.toString(), lastType, _level);
+				loadPic(_id, _type, _level);
 			}
-			
-			//toDisplay("id: "+_id+" "+model.getLandArray()[_id].x+" "+model.getLandArray()[_id].y);
-			
-			
 		}
 		
 		private function userChoose(_type:String, _id:String):void{
@@ -91,51 +86,20 @@ package mvc
 			toServer(comand);
 			
 		}
-		
-		/*public function loadedPlant(id:String):void
-		{
-			//model.addImagePlant("bm", id);
-		}*/
-		
+
 		public function levelUP():void
 		{
 			toServer("addLevels");	
-			/*
-			var arr:Array = model.getLandArray(); // получить список полей.
-			var types:String;
-			var levels:int;
-			
-			for(var i:int = 0 ; i< arr.length; i++){
-				
-				if(arr[i].getLevel() > 0 && arr[i].getLevel() < 5){
-
-					var obj:Object 	= model.getPictures();
-					
-					types 			= arr[i].getType();
-					levels 			= arr[i].getLevel();
-					
-					trace(i+" types "+types+"/level+1 "+(levels+1));
-					
-					if(obj[types+"/"+(levels+1)]){
-					// загрузить картинку с хранилища.
-						var bd:BitmapData = obj[types+"/"+(levels+1)].bitmapData.clone();
-						var bm:Bitmap = new Bitmap(bd);
-						
-						model.addImagePlant(bm, int(i), types);
-					
-					}else{
-						oldStage[i] = new Array(types,(levels+1));
-						loadPic(i.toString(), oldStage[i][0], oldStage[i][1]);
-					}
-				}
-			}*/
 		}
 
 		
 		public function clearPlant():void
 		{
-			trace("удаление ");
 			model.getLandArray()[lastPressed].clearType();
+			toDisplay("lastPressed "+lastPressed);
+			toDisplay("clearPlant0 "+"/ "+oldStage[lastPressed][0]);
+			toDisplay("clearPlant1 "+"/ "+oldStage[lastPressed][1]);
+			toDisplay("clearPlant2 "+"/ "+oldStage[lastPressed][2]);
 			toServer("clearPlant"+"/"+oldStage[lastPressed][2]);
 		}
 		
@@ -147,16 +111,15 @@ package mvc
 				toServer("info");
 				createPlant();
 			}else{
-				//toDisplay(data);
+
 				var xml:XMLList = XMLList(data);
-				//toDisplay(xml);
-				toDisplay(xml.children().children());
+				toDisplay("from Server: "+xml);
 				
 			var tempXml:XMLList;
 			var tempStr:String;
 			
 			var type:String;
-			var dbID:int;
+			var db_ID:int;
 			var xx:int;
 			var yy:int;
 			var pr_end:String;
@@ -164,7 +127,7 @@ package mvc
 				for(var i:int= 0 ; i< xml.children().children().length(); i++){
 					tempStr = xml.children().children()[i].toXMLString();
 					tempXml = XMLList(tempStr);
-					toDisplay(i.toString()+" "+tempXml.name());
+					//toDisplay(i.toString()+" "+tempXml.name());
 					
 					// полученный обьект.
 					// посадить на поле );
@@ -173,25 +136,18 @@ package mvc
 					
 					
 					type 	= tempXml.name();
-					dbID 	= tempXml.@id;
+					db_ID 	= tempXml.@id;
 					xx 		= tempXml.@x;
 					yy 		= tempXml.@y;
 					pr_end  = tempXml.@process_end;
 					
-					var str:String = pr_end.substr(6);
-					lastLevel = int(str);
-					oldStage[i] = new Array(type, lastLevel, dbID);
-					toDisplay("type "+type+ " lastLevel "+lastLevel );
+					var _level:String = pr_end.substr(6); // future unix time
+					
 					var plantID:String = converter.convertXYtoPlantID(xx,yy);
-					toDisplay("plantID "+plantID);
-					choosePlant(type, plantID, int(str));
-					
+					oldStage[plantID] = new Array(type, int(_level), db_ID);
+					choosePlant(type, plantID, int(_level));
 				}
-					
-		//	toDisplay("list[0] "+xml.children().children()[0].toXMLString());
-			
-			}
-				
+			}	
 		}
 		
 		private function toDisplay(data:String):void{
@@ -245,10 +201,8 @@ package mvc
 		{
 			if(bMouseDown && e.target.name == "background")
 			{
-				// дать координату нажатия
 				xx = e.stageX - oldStage.x;
 				yy = e.stageY - oldStage.y
-				//trace("xx "+xx+" yy"+yy);
 				if(xx < 640 - 1565) xx = 640 - 1565;
 				if(yy < 480 - 908)  yy = 480 - 908;
 				if(xx > 0) xx = 0;
@@ -275,26 +229,22 @@ package mvc
 				lastPressed = e.target.getID();
 				model.viewTypePlant();// задать выбор растения
 				}else{
-					trace(e.target.getLevel());
 					if(e.target.getLevel() == 5){
 						lastPressed = e.target.getID();
 						model.addCleaner();
 					}
 				}
-			}else if( e.target.toString() == "[object ButtonClear]"){
-				
-				//lastPressed = e.target.getID();
+			}else if( e.target.toString() == "[object ButtonClear]")
+			{
 				clearPlant();
 				model.getClearBtn().remove();
 				
 				}else{
-				trace("else");
 				if(model.getTypePlant().parent)
 					model.getTypePlant().remove();
 				
 				if(model.getClearBtn().parent)
 					model.getClearBtn().remove();
-				
 			}
 		}	
 		
@@ -337,6 +287,7 @@ package mvc
 			
 			var loader:Loader = new Loader();
 			loader.name = _ind;
+			
 			oldStage[_ind] = new Array(_type, level);
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, pictComplete);
 			loader.contentLoaderInfo.addEventListener(ErrorEvent.ERROR, pictError);
@@ -352,7 +303,7 @@ package mvc
 		
 		private function pictError(e:ErrorEvent):void
 		{
-			trace("неправильный урл адрес картинки");
+			trace("неправильный url адрес картинки");
 		}
 	}
 }

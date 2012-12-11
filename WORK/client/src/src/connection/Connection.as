@@ -40,7 +40,7 @@ package connection
 		
 		protected function socketdata(e:ProgressEvent):void
 		{
-			trace("socketdata");
+			//trace("socketdata");
 			var str:String = socket.readUTF();
 			toController(str);
 		}

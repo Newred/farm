@@ -1,6 +1,5 @@
 package util
-{
-	
+{	
 	public class CoordinateConvector
 	{
 		private var obj:Object = {};
@@ -17,8 +16,6 @@ package util
 				obj[i] = X+","+Y;
 				obj["x"+X] = X;
 				obj["y"+Y] = Y;
-				
-				
 				obj[X+","+Y] = i;
 			}
 		}
@@ -26,7 +23,6 @@ package util
 		public function convertXYtoPlantID(xx:int, yy:int):String{
 			return obj[xx+","+yy];
 		}
-		
 		public function converPlantIDtoX(id:int):int{
 			return obj["x"+id];
 		}

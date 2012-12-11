@@ -1,18 +1,13 @@
 package mvc
 {
 	import event.GameEvent;
-	
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-	
 	import plant.Plant;
-	
 	import ui.Button;
-	
-	//import ui.TypePlant;
 	
 	public class View extends Sprite
 	{
@@ -26,13 +21,11 @@ package mvc
 		private var btnConnect:Button;
 		private var tf:TextField;
 
-		
 		public function View(_model:Model, _controller:Controller, _target:Stage)
 		{
 			model 		= _model ;
 			controller 	= _controller;
 			target 		= _target;
-			
 			init();
 		}
 		
@@ -102,7 +95,7 @@ package mvc
 		
 		private function choose(e:GameEvent):void
 		{
-			trace("выбрали "+e.window);
+			//trace("выбрали "+e.window);
 			controller.choosePlant(e.window);
 		}
 		
@@ -116,7 +109,6 @@ package mvc
 			controller.createConnection();
 			btnConnect.enableBtn(false);
 			btnConnect.removeEventListener(MouseEvent.CLICK, btnConnectClick);
-			
 		}
 		
 		private function moveLand(e:GameEvent):void
@@ -132,7 +124,6 @@ package mvc
 		
 		private function typePlant(e:GameEvent):void
 		{
-			//container.addChild();
 			e.param.type.x = mouseX -40;
 			e.param.type.y = mouseY -60;
 			uicontainer.addChild(e.param.type);
@@ -140,6 +131,7 @@ package mvc
 		
 		private function addClearPlant(e:GameEvent):void
 		{
+			// в обекте e.param находится кнопка сборки урожая
 			e.param.btn.x = mouseX;
 			e.param.btn.y = mouseY;
 			uicontainer.addChild(e.param.btn);
@@ -148,6 +140,7 @@ package mvc
 		private function setText(e:GameEvent):void
 		{
 			tf.appendText("\n"+e.window);
+			tf.scrollV = tf.maxScrollV;
 		}
 	}
 }

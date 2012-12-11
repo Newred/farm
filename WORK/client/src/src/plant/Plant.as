@@ -42,6 +42,7 @@ package plant
 		
 		private function createListener():void
 		{
+			// Listener work in controller
 			//addEventListener(MouseEvent.MOUSE_OVER, mouseover);
 			//addEventListener(MouseEvent.MOUSE_OUT, mouseout);
 			//addEventListener(MouseEvent.MOUSE_MOVE, mousemove);
@@ -99,9 +100,9 @@ package plant
 		public function getType():String{
 			return type;
 		}
-		public function levelUP(max:int = 5):void{
+		/*public function levelUP(max:int = 5):void{
 			if(level < max) level ++;	
-		}
+		}*/
 		public function clearType():void
 		{
 			level = 0;
