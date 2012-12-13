@@ -17,7 +17,7 @@ public class DBconnect {
 		frameVille = _frameVille;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("driver найден");
+			System.out.println("driver mysql is enabled");
 			
 			
 			String dbn = "farm";
@@ -35,7 +35,7 @@ public class DBconnect {
 			parseResult(resultset);
 			
 		} catch (ClassNotFoundException e) {
-			System.out.println("Driver mysql не найден");
+			System.out.println("Driver mysql not found");
 		}catch (SQLException e) { e.printStackTrace(); }
 	}
 	
