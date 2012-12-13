@@ -11,6 +11,7 @@ package mvc
 	import flash.display.Stage;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.sendToURL;
@@ -38,6 +39,7 @@ package mvc
 		private var conToServer:Connection;
 		private var security:Boolean = false;
 		private var converter:CoordinateConvector = new CoordinateConvector();
+		private var urlPicture:String = "http://newred.org.ua/download/avenue/lib/";
 		
 		public function Controller(_model:Model)
 		{
@@ -105,7 +107,7 @@ package mvc
 		
 		public function fromServer(data:String):void
 		{
-			//toDisplay("C: fromserver "+data);
+			toDisplay("C: fromserver "+data);
 			
 			if(data == "hello"){
 				toServer("info");
@@ -171,17 +173,22 @@ package mvc
 		private function loadbg():void
 		{
 			var context:LoaderContext = new LoaderContext();
-			//context.applicationDomain = ApplicationDomain.currentDomain;
-			context.checkPolicyFile = true; 
-			
+			context.applicationDomain = ApplicationDomain.currentDomain;
+			context.checkPolicyFile = false;
+				
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, bgComplete);
-			loader.load(new URLRequest("lib/BG.jpg"),context);
+			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, errorBG);
+			loader.load(new URLRequest(urlPicture+"BG.jpg"),context);
 		}
 		private function bgComplete(e:Event):void
 		{
 			e.target.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, bgComplete);
 			model.setBG(e.target.content as Bitmap);
+		}
+		private function errorBG(e:IOErrorEvent):void
+		{
+			toDisplay("errorBG"+e.text);
 		}
 
 /*==========================================
@@ -298,7 +305,7 @@ package mvc
 			toDisplay("oldStage[_ind] "+oldStage[_ind])
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, pictComplete);
 			loader.contentLoaderInfo.addEventListener(ErrorEvent.ERROR, pictError);
-			loader.load(new URLRequest("lib/"+_type+"/"+level+".png"),context);
+			loader.load(new URLRequest(urlPicture+_type+"/"+level+".png"),context);
 		}
 		private function pictComplete(e:Event):void
 		{
