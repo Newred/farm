@@ -27,7 +27,7 @@ package mvc
 			//trace("Model ok");
 		}
 		
-		public function setBG(_bg:Bitmap):void{ 
+		public function setBG(_bg:Bitmap):void{
 			bg = _bg ;
 			toView("getBG","","");
 		}	
