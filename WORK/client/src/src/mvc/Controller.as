@@ -39,7 +39,8 @@ package mvc
 		private var conToServer:Connection;
 		private var security:Boolean = false;
 		private var converter:CoordinateConvector = new CoordinateConvector();
-		private var urlPicture:String = "http://newred.org.ua/download/avenue/lib/";
+		//private var urlPicture:String = "http://newred.org.ua/download/avenue/lib/";
+		private var urlPicture:String = "lib/";
 		
 		public function Controller(_model:Model)
 		{
